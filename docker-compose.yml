@@ -1,0 +1,17 @@
+services:
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: nestjs_auth
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
