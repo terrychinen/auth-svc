@@ -1,0 +1,4 @@
+export enum Constants {
+  DATA_SOURCE = 'DATA_SOURCE',
+  USER_REPOSITORY = 'IUSER_REPOSITORY',
+}

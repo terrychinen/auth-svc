@@ -1,17 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { IUserRepository } from './interfaces/user-repository.interface';
 import { User } from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import { SignUpDto } from '../dtos/sign-up.dto';
 
 @Injectable()
 export class MysqlUserRepository implements IUserRepository {
-  constructor() {}
+  constructor(
+    @InjectRepository(User)
+    private _userRepositorory: Repository<User>,
+  ) {}
 
-  findByEmail(email: string) {
-    throw new Error('Method not implemented.');
+  findByEmail(email: string): Promise<User | null> {
+    return this._userRepositorory.findOne({ where: { email } });
   }
 
-  save(user: any) {
-    throw new Error('Method not implemented.');
+  async save(user: SignUpDto): Promise<User> {
+    const newUser = this._userRepositorory.create(user);
+    return this._userRepositorory.save(newUser);
   }
 }

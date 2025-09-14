@@ -4,11 +4,13 @@ import * as bcrypt from 'bcrypt';
 
 import { IUserRepository } from './repositories/interfaces/user-repository.interface';
 import { SignUpDto } from './dtos/sign-up.dto';
+import { Constants } from 'src/configs/enums/constants';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+    @Inject(Constants.USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
   ) {}
 
   signIn() {}
@@ -16,10 +18,10 @@ export class AuthService {
   async signUp(signUpDto: SignUpDto) {
     const { email, password } = signUpDto;
 
-    const isUserExists = this.userRepository.findByEmail(email);
+    const isUserExists = await this.userRepository.findByEmail(email);
 
     if (isUserExists) {
-      throw new ConflictException(`The email already exists`);
+      throw new ConflictException(`The email is already exists`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,10 +32,6 @@ export class AuthService {
       password: hashedPassword,
     };
 
-    const savedUser = this.userRepository.save(newUser);
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = savedUser;
-    return userWithoutPassword;
+    return this.userRepository.save(newUser);
   }
 }
