@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import { User } from '@auth/entities/user.entity';
+import { SignUpDto } from '@auth/dtos/sign-up.dto';
+
 import { IUserRepository } from './interfaces/user-repository.interface';
-import { User } from '../entities/user.entity';
-import { SignUpDto } from '../dtos/sign-up.dto';
 
 @Injectable()
 export class MysqlUserRepository implements IUserRepository {
@@ -18,7 +19,7 @@ export class MysqlUserRepository implements IUserRepository {
     return this._userRepositorory.findOne({ where: { email } });
   }
 
-  async save(user: SignUpDto): Promise<User> {
+  save(user: SignUpDto): Promise<User> {
     const newUser = this._userRepositorory.create(user);
     return this._userRepositorory.save(newUser);
   }

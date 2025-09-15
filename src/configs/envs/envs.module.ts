@@ -10,4 +10,4 @@ import { envsSchema } from './envs.schema';
     }),
   ],
 })
-export class ConfigsModule {}
+export class EnvsModule {}
